@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matrix Rain with Love</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, monospace; /* Добавляем Arial для поддержки кириллицы */
+            color: green;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        #roamingOne {
+            position: fixed;
+            color: pink;
+            font-size: 24px;
+            z-index: 2;
+            cursor: pointer;
+        }
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 3;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+            text-align: center;
+            color: black;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        #searchBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+        #searchBox input {
+            font-size: 16px;
+            padding: 10px;
+        }
+        #heartMessage {
+            display: none;
+            position: fixed;
+            z-index: 4;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: pink;
+            text-align: center;
+            font-size: 24px;
+            font-family: Arial; /* Указываем Arial для красивого отображения текста */
+        }
+        .heart {
+            font-size: 48px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+<div id="roamingOne">1</div>
+<div id="searchBox">
+    <input type="text" placeholder="User Search"/>
+</div>
+<div id="heartMessage">
+    <div class="heart">&hearts;</div>
+    <p>My lovely Maria, My dearly kitty,</p>
+    <p>I am very happy that you are in my life.</p>
+    <p>I’m very glad that I finally approached you and asked you out on a date.</p>
+    <p>I love you madly and am immensely glad that I go through my life with you!</p>
+    <p>I love you &hearts;</p>
+</div>
+<div id="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>User ID: 19-01-1998</p>
+    </div>
+</div>
+<script>
+    var canvas = document.getElementById('matrixCanvas');
+    var ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var characters = "10".split("");
+    var font_size = 14;
+    var columns = canvas.width / font_size;
+    var drops = [];
+    for (var x = 0; x < columns; x++) drops[x] = 1;
+
+    var matrixColor = "rgba(0, 255, 0, 0.7)"; // Adjust for a lighter green color
+
+    function drawMatrixRain() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = matrixColor;
+        ctx.font = font_size + "px Arial"; // Используем Arial
+        for (var i = 0; i < drops.length; i++) {
+            var text = characters[Math.floor(Math.random()*characters.length)];
+            ctx.fillText(text, i*font_size, drops[i]*font_size);
+
+            if(drops[i]*font_size > canvas.height && Math.random() > 0.975)
+                drops[i] = 0;
+
+            drops[i]++;
+        }
+    }
+    setInterval(drawMatrixRain, 33);
+
+    var roamingOne = document.getElementById('roamingOne');
+    roamingOne.onclick = function() {
+        modal.style.display = 'flex';
+    };
+
+    var close = document.querySelector('.close');
+    close.onclick = function() {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    var searchBox = document.getElementById("searchBox").querySelector("input");
+    var heartMessage = document.getElementById("heartMessage");
+    searchBox.oninput = function() {
+        if (searchBox.value === "19-01-1998") {
+            heartMessage.style.display = "block";
+            matrixColor = "rgba(255, 182, 193, 0.7)"; // Используем более нежный розовый цвет
+        } else {
+            heartMessage.style.display = "none";
+            matrixColor = "rgba(0, 255, 0, 0.7)"; // Возвращаем зеленый цвет
+        }
+    };
+
+    function moveRoamingOne() {
+        var newX = Math.random() * (window.innerWidth - roamingOne.offsetWidth);
+        var newY = Math.random() * (window.innerHeight - roamingOne.offsetHeight);
+        roamingOne.style.left = newX + 'px';
+        roamingOne.style.top = newY + 'px';
+    }
+    setInterval(moveRoamingOne, 2000); // Исправлено для корректного перемещения
+</script>
+</body>
+</html>
